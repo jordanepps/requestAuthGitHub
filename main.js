@@ -1,21 +1,21 @@
 function loadRepo(repo) {
-	console.log(repo);
 	return `<div><h3>${repo.full_name}</h3><a href="${
 		repo.html_url
 	}" target="_blank">Link to Repo</a></div>`;
 }
 
+function handleNoUser() {
+	$('#js-status-message').html('User Not Found');
+	$('#js-user-repos').empty();
+}
+
+function handleUserExists(repos) {
+	$('#js-status-message').html(`User: ${$('#github-user').val()}`);
+	$('#js-user-repos').html(repos.map(loadRepo));
+}
+
 function handleRepos(repos) {
-	console.log(repos);
-	const message = 'User: ' + repos.message || $('#github-user').val();
-	console.log(message);
-	if (!repos.message) {
-		$('#js-error-message').html($('#github-user').val());
-		$('#js-user-repos').html(repos.map(loadRepo));
-	} else {
-		$('#js-error-message').html('No User Found');
-		$('#js-user-repos').empty();
-	}
+	repos.message ? handleNoUser() : handleUserExists(repos);
 }
 
 function getRepos(user) {
